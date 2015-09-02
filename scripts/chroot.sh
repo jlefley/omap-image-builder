@@ -1061,13 +1061,6 @@ fi
 mkdir -p ${DIR}/deploy/${export_filename}/ || true
 cp -v ${DIR}/.project ${DIR}/deploy/${export_filename}/image-builder.project
 
-if [ -n "${chroot_after_hook}" -a -r "${DIR}/${chroot_after_hook}" ] ; then
-	report_size
-	echo "Calling chroot_after_hook script: ${chroot_after_hook}"
-	. "${DIR}/${chroot_after_hook}"
-	chroot_after_hook=""
-fi
-
 #add /boot/uEnv.txt update script
 if [ -d ${tempdir}/etc/kernel/postinst.d/ ] ; then
 	if [ ! -f ${tempdir}/etc/kernel/postinst.d/zz-uenv_txt ] ; then
@@ -1093,6 +1086,13 @@ fi
 #ID.txt:
 if [ -f ${tempdir}/etc/dogtag ] ; then
 	sudo cp ${tempdir}/etc/dogtag ${DIR}/deploy/${export_filename}/ID.txt
+fi
+
+if [ -n "${chroot_after_hook}" -a -r "${DIR}/${chroot_after_hook}" ] ; then
+	report_size
+	echo "Calling chroot_after_hook script: ${chroot_after_hook}"
+	. "${DIR}/${chroot_after_hook}"
+	chroot_after_hook=""
 fi
 
 report_size
